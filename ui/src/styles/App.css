@@ -1,0 +1,175 @@
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f4f9;
+  margin: 0;
+  padding: 0;
+}
+
+.App {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #4a90e2;
+  padding: 10px 20px;
+  color: #fff;
+  border-radius: 5px;
+}
+
+.header h1 {
+  margin: 0;
+}
+
+.btn-logout {
+  background-color: #d9534f;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btn-logout:hover {
+  background-color: #c9302c;
+}
+
+.login-form {
+  display: flex;
+  gap: 10px;
+}
+
+.login-form input {
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+}
+
+.login-form button {
+  background-color: #5cb85c;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.login-form button:hover {
+  background-color: #4cae4c;
+}
+
+.error-container {
+  margin-top: 10px;
+  /* Adjust as needed */
+}
+
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.error {
+  text-align: center;
+  color: #d9534f;
+  margin-top: 5px;
+}
+
+.content {
+  margin-top: 20px;
+}
+
+.input-group {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.input-group input {
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+}
+
+.input-group button {
+  background-color: #5bc0de;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.input-group button:hover {
+  background-color: #31b0d5;
+}
+
+.pois-list {
+  list-style: none;
+  padding: 0;
+}
+
+.pois-list li {
+  background-color: #fff;
+  margin-bottom: 5px;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.login-prompt {
+  text-align: center;
+  color: #666;
+}
+
+
+/* Table container */
+.table-container {
+  width: 100%;
+  margin-top: 20px;
+}
+
+/* Telemetry table styles */
+.telemetry-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: Arial, sans-serif;
+}
+
+.telemetry-table th,
+.telemetry-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.telemetry-table th {
+  background-color: #4a90e2;
+  color: white;
+}
+
+.telemetry-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.telemetry-table tr:hover {
+  background-color: #ddd;
+}
+
+.telemetry-table th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #4a90e2;
+  color: white;
+}
+
+/* Map container styles */
+#map {
+  height: 600px;
+  width: 100%;
+}

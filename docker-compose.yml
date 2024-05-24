@@ -1,0 +1,34 @@
+services:
+  api:
+    build: ./api
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+    develop:
+      watch:
+        - action: sync
+          path: ./api/app
+          target: /app/app
+
+  ui:
+    build: ./ui
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+    develop:
+      watch:
+        - action: sync
+          path: ./ui/src
+          target: /app/src
+
+  redis:
+    image: "redis:alpine"
+    ports:
+      - "6379:6379"
+
+  on_car:
+    build: ./car
+    depends_on:
+      - api
