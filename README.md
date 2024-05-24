@@ -8,7 +8,7 @@ Welcome to the Automotive PS Telemetry Service example application.
 ## What's included
 
 ```mermaid
-graph TD;
+graph LR;
     Car --> API;
     API --> Car;
     API --> Redis;
