@@ -8,13 +8,10 @@ Welcome to the Automotive PS Telemetry Service example application.
 ## What's included
 
 ```mermaid
-graph LR;
-    Car --> API;
-    API --> Car;
-    API --> Redis;
-    Redis --> API;
-    API --> UI;
-    UI --> API;
+flowchart LR;
+    Car -->|GPS Data| API;
+    API <--> Redis;
+    API <-->|Points on map| UI;
 ```
 
 - **On Car GPS**: The on-car GPS sensor transmits location data to a cloud API.
