@@ -97,4 +97,4 @@ We welcome contributions. Please fork the repository and submit a pull request w
 
 ## License
 
-This project is licensed under the MIT License. See the (LICENSE.txt)[./LICENSE.txt] file for details.
+This project is licensed under the MIT License. See the [LICENSE.txt](./LICENSE.txt) file for details.
