@@ -22,9 +22,9 @@ flowchart LR;
       [lwgps](https://github.com/MaJerle/lwgps).  
     - Creates testing coverage. Many standards require source and/or binary
       testing coverage. 
-    - Identifies what SBOM/SCA components are on the attack surface. There are
-      several components that have known vulnerabilities, but are never used at
-      runtime thus cannot be attacked.  
+    - Identifies what SBOM/SCA components are on the attack surface. The
+      compiled app only uses glibc, so any other SBOM/SCA results are not on
+      the attack surface and are irrelevant. 
 - **Cloud API**: The cloud API receives GPS data from cars, and services a UI
   for displaying that information. The API is built on
   [FastAPI](https://fastapi.tiangolo.com/), one of the most popular python

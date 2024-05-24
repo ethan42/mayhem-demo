@@ -50,6 +50,7 @@ class Location(BaseModel):
     latitude: float
     longitude: float
 
+# SQL injection on the login route. 
 @app.post("/login")
 async def login(user: UserLogin):
     logger.info(f"Login attempt for email: {user.email}")
