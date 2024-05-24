@@ -67,7 +67,7 @@ older version of Docker, you can delete the `develop` section of the
 You can use [Mayhem](https://mayhem.security) to find the vulnerabilities in
 this repo.  
 
-![Mayhem Overview Image](./mayhem_overview.png)
+![Mayhem Overview Image](./mayhem_overview.svg)
 
 ### C Vulnerabilities
 
