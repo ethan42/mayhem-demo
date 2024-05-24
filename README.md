@@ -47,11 +47,14 @@ bring up, run:
 docker-compose up --build --watch
 ```
 
+Then navigate to [http://localhost:3000](http://localhost:3000). In more detail: 
 
-  - (UI)[http://localhost:3000]. The default username and password is
+  - **UI**: [http://localhost:3000](http://localhost:3000). The default username and password is
     `me@me.com` and `123456`.  See (./api/app/main.py)[./api/app/main.py].
-  - (API)[http://localhost:8000]
-  - (OpenAPI Spec)[http://localhost:8000/openapi.json]
+  - **API**: [http://localhost:8000](http://localhost:8000). Written in FastAPI (python).
+  - **OpenAPI**:
+    [http://localhost:8000/openapi.json](http://localhost:8000/openapi.json).
+    Generated automatically by FastAPI. 
 
 **Note** The `--watch` flag requires a recent version of docker-compose, and sync's any
 changes in the API or UI files with the running docker instance. If you have an
@@ -61,7 +64,32 @@ older version of Docker, you can delete the `develop` section of the
 
 ## Vulnerabilities
 
-TBD
+You can use [Mayhem](https://mayhem.security) to find the vulnerabilities in
+this repo.  
+
+![Mayhem Overview Image](./mayhem_overview.png)
+
+### C Vulnerabilities
+
+[./car/gps_uploader.c](./car/gps_uploader.c) contains vulnerabilities based
+upon lwgps and damn vulnerable C, including:
+  * Integer overflow
+  * Integer underflow
+  * Stack-based buffer overflow
+  * Heap overflow
+  * Double Free
+  * Use-after-free
+  * Memory leaks
+
+### API Vulnerabilities
+[./api/app/main.py](./api/app/main.py) contains a SQL injection vulnerability.
+
+### SBOM non-vulnerabilities
+SBOM tools will report various vulnerabilities in the base images that are
+unreachable, such as in redis. Since they are unreachable (not on the attack
+surface), they do not need to be remediated and are often considered "false
+positives" by developers. 
+
 
 ## Contributing
 
