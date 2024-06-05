@@ -1,9 +1,9 @@
 # OT Example Service 
 
 OT is a growing security concern, with typically three parts to the stack:
-1. Finding known OSS vulnerabilities across the stack.
-2. Checking the OT components for unknown vulnerabilities.
-3. Checking backend and user-facing APIs.
+1. Finding what's on the attack surface, and what known vulnerabilities exist.
+2. Finding new exploitable vulnerabilities.
+3. Building this into the pipeline for continuous development.
 
 To make this concrete, we've built a GPS example.
 
