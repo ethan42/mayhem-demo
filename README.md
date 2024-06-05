@@ -1,6 +1,11 @@
-# Automotive GPS Telemetry Service 
+# OT Example Service 
 
-Welcome to the Automotive PS Telemetry Service example application.
+OT is a growing security concern, with typically three parts to the stack:
+1. Finding known OSS Vulneraiblities across the stack
+2. Checking the OT components for vulnerabilities
+3. Checking backend and user-facing APIs
+
+To make this concrete, we've built a GPS example.
 
 ![GPS Telemetry Image](./gps_telemetry_image.png)
 
