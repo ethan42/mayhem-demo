@@ -1,5 +1,5 @@
 FROM gcc:latest
-RUN apt-get update && apt-get install -y --no-install-recommends build-essential curl netcat-traditional
+RUN apt-get update && apt-get install -y --no-install-recommends build-essential curl netcat-traditional libc6-dbg
 WORKDIR /app
 COPY gps_uploader.c .
 ENV DEBUG true
