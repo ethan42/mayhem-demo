@@ -50,7 +50,7 @@ docker-compose up --build --watch
 Then navigate to [http://localhost:3000](http://localhost:3000). In more detail: 
 
   - **UI**: [http://localhost:3000](http://localhost:3000). The default username and password is
-    `me@me.com` and `123456`.  See (./api/app/main.py)[./api/app/main.py].
+    `me@me.com` and `123456`.  See [./api/app/main.py](./api/app/main.py).
   - **API**: [http://localhost:8000](http://localhost:8000). Written in FastAPI (python).
   - **OpenAPI**:
     [http://localhost:8000/openapi.json](http://localhost:8000/openapi.json).
