@@ -96,10 +96,11 @@ void upload_position(double latitude, double longitude)
   snprintf(command, sizeof(command),
     "curl -X POST -H \"Content-Type: application/json\" -d '{\"latitude\": %.6f, \"longitude\": %.6f}' %s",
     latitude, longitude, URL);
-#ifdef DEBUG
+#ifdef TEST
   printf("Command: %s\n", command);
-#endif
+#else 
   system(command);
+#endif
 }
 
 // Damn vulnerable C stack exhaustion
