@@ -8,33 +8,56 @@
 #define CIN(x)  ((x) >= '0' && (x) <= '9')
 #define CTN(x)  ((x) - '0')
 
+// Damn vulnerable C stack exhaustion
+void stack_exhaustion() {
+  char buff[0x1000];
+  while (1) {
+    stack_exhaustion();
+  }
+}
 
-// Taken from LWGPS (https://github.com/ms-rtos/lwgps/) 
-// Floating point overflow. 
-double parse_float_number(const char* text) {
-  double value = 0.0, power = 1.0;
-  int sign = 1;
-  if (text == NULL)
-    return value;
+void damn_vulnerable_c(char* line, int latitude, int longitude) {
 
-  for (; text != NULL && *text == ' '; ++text) {} /* Strip leading spaces */
-  if (*text == '-') { /* Check sign */
-    sign = -1;
-    ++text;
+  volatile int size1, size2, size3, size4;
+  
+  // A bit of computation on our inputs. 
+  if (latitude < 0) {
+    latitude = -latitude;
   }
-  while (CIN(*text)) { /* Convert main part */
-    value = value * (double)10 + CTN(*text);
-    ++text;
+  if (longitude < 0) {
+    longitude = -longitude;
   }
-  if (*text == '.') { /* Skip the dot character */
-    ++text;
+
+  size1 = latitude / longitude; // divide by zero
+  
+  size2 = latitude + longitude; // integer overflow 0x7FFFFFFF+1=0
+
+  size3 = latitude - longitude; // integer underflow 0-1 = -1
+
+  if (size2 == 1000) // Stack exhausion 
+    stack_exhaustion();
+
+  size4 = strlen(line) + size2; 
+
+  char* buff1 = (char*)malloc(size4); // Fails when size4 < 0
+
+  // Out of bounds write (heap overflow)
+  // when size4 < strlen(line) or <0
+  strcpy(buff1, line);  
+
+  char OOBR = buff1[size2]; // Out of bounds read/NULL pointer deref 
+
+  free(buff1);
+
+  if (size2 / 2 == 0) {
+    free(buff1);   // Double Free = Free of Memory Not on Heap	
   }
-  while (CIN(*text)) { /* Get the power */
-    value = value * (double)10 + CTN(*text);
-    power *= (double)10;
-    ++text;
+  else {
+    if (size2 / 3 == 0) {
+      buff1[0] = 'a';     // Out of bounds write b.c. use-after-free
+    }
   }
-  return sign * value / power;
+
 }
 
 
@@ -46,10 +69,10 @@ void parseLatLon(char* line, double* time, double* latitude, double* longitude) 
   token = strtok(line, ",");
 
   // Check message is of assumed message type for our receiver
-  if (strncmp(token, "$GPRMC", 6) == 0) {
+  if (strncmp(token, "$GPRMC", 6) == 0) { // OOB Read when token = NULL
     // Read pos status field. 
     token = strtok(NULL, ",");
-    *time = parse_float_number(token);
+    *time = atof(token);
     token = strtok(NULL, ","); // pos_status field. 
     if (token != NULL && token[0] != 'A') {
       printf("Skipping record with invalid position.\n");
@@ -58,7 +81,7 @@ void parseLatLon(char* line, double* time, double* latitude, double* longitude) 
   }
   else if (strncmp(token, "$GPGGA", 6) == 0) {
     token = strtok(NULL, ",");
-    *time = parse_float_number(token);
+    *time = atof(token);
     // There is no pos status field; continue on. 
   }
   else {
@@ -70,14 +93,14 @@ void parseLatLon(char* line, double* time, double* latitude, double* longitude) 
   while (token != NULL) {
     switch (i) {
     case 1: // latitude
-      *latitude = parse_float_number(token) / 100.0;
+      *latitude = atof(token) / 100.0;
       break;
     case 2: // latitude direction (N/S)
       if (token[0] == 'S')
         *latitude = -(*latitude);
       break;
     case 3: // longitude
-      *longitude = parse_float_number(token) / 100.0;
+      *longitude = atof(token) / 100.0;
       break;
     case 4: // longitude direction (E/W)
       if (token[0] == 'W')
@@ -103,59 +126,6 @@ void upload_position(double latitude, double longitude)
 #endif
 }
 
-// Damn vulnerable C stack exhaustion
-void stack_exhaustion() {
-  char buff[0x1000];
-  while (1) {
-    stack_exhaustion();
-  }
-}
-
-void damn_vulnerable_c(char* line, int latitude, int longitude) {
-
-  // A bit of computation on our inputs. 
-  if (latitude < 0) {
-    latitude = -latitude;
-  }
-  if (longitude < 0) {
-    longitude = -longitude;
-  }
-
-  // integer overflow 0x7FFFFFFF+1=0
-  // 0x7FFFFFFF+2 = 1
-  // Volatile keyword ensures variable not optimized away since
-  // it's never used past this calculation. 
-  volatile int size1 = latitude + longitude;
-
-  // integer underflow 0-1=-1
-  volatile int size2 = latitude - longitude;
-
-  // Divide by zero. 
-  volatile int size3 = latitude / longitude;
-
-  // Stack exhaustion
-  if (size1 == 1000)
-    stack_exhaustion();
-
-  char* buff1 = (char*)malloc(strlen(line) + size1);
-
-  strcpy(buff1, line);  // Heap overflow
-
-  char OOBR = buff1[size1]; // Out of bounds read
-  buff1[size1] = 'a';       // Out of bound write
-
-  free(buff1);
-
-  if (size1 / 2 == 0) {
-    free(buff1);   //double free	
-  }
-  else {
-    if (size1 / 3 == 0) {
-      buff1[0] = 'a';     //use after free
-    }
-  }
-
-}
 
 int main(int argc, char* argv[])
 {

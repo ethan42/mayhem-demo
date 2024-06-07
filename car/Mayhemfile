@@ -1,6 +1,7 @@
-project: demos/gps_telemetry
-target: car
-image: index.docker.io/dbrumley/car
+project: demos/car
+target: car-v11
+image: dbrumley/car
+advanced_triage: true
 cmds:
   - cmd: /app/gps_uploader @@
     env: {}
