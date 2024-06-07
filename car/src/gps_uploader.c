@@ -16,7 +16,7 @@ void stack_exhaustion() {
   }
 }
 
-void damn_vulnerable_c(char* line, int latitude, int longitude) {
+void vulnerable_c(char* line, int latitude, int longitude) {
 
   volatile int size1, size2, size3, size4;
   
@@ -129,6 +129,7 @@ void upload_position(double latitude, double longitude)
 
 int main(int argc, char* argv[])
 {
+  char line[256];
   double latitude = 0.0, longitude = 0.0, time = 0.0;
 
   if (argc != 2)
@@ -145,10 +146,6 @@ int main(int argc, char* argv[])
     return 1;
   }
 
-  char line[256];
-  char unparsed_line[256];
-
-  // Buffer overflow when line > 256
   while (fgets(line, sizeof(line), file))
   {
     latitude = 0.0;
@@ -158,7 +155,7 @@ int main(int argc, char* argv[])
 
     // Example vulnerable C 
     // Ported from https://github.com/hardik05/Damn_Vulnerable_C_Program/blob/master/imgRead.c
-    damn_vulnerable_c(line, (int)latitude, (int)longitude);
+    vulnerable_c(line, (int)latitude, (int)longitude);
     printf("Uploading Latitude: %f, Longitude: %f\n", latitude, longitude);
     upload_position(latitude, longitude);
   }
