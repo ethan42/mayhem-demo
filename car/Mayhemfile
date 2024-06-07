@@ -1,5 +1,5 @@
 project: demos/car
-target: car-v11
+target: car-v18
 image: dbrumley/car
 advanced_triage: true
 cmds:
