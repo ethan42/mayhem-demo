@@ -155,8 +155,6 @@ void damn_vulnerable_c(char* line, int latitude, int longitude) {
     }
   }
 
-  // Memory leak of buf2
-  volatile char* buf2 = (char*)malloc(size1);
 }
 
 int main(int argc, char* argv[])
