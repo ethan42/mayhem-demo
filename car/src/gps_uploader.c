@@ -65,6 +65,9 @@ void vulnerable_c(char* line, int latitude, int longitude) {
 void parseLatLon(char* line, double* time, double* latitude, double* longitude) {
   int i = 0;
   char* token;
+  *time = 0.0;
+  *latitude = 0.0;
+  *longitude = 0.0;
 
   token = strtok(line, ",");
 
@@ -72,7 +75,9 @@ void parseLatLon(char* line, double* time, double* latitude, double* longitude) 
   if (strncmp(token, "$GPRMC", 6) == 0) { // OOB Read when token = NULL
     // Read pos status field. 
     token = strtok(NULL, ",");
-    *time = atof(token);
+    if(token != NULL)
+      *time = atof(token);
+
     token = strtok(NULL, ","); // pos_status field. 
     if (token != NULL && token[0] != 'A') {
       printf("Skipping record with invalid position.\n");
@@ -81,7 +86,8 @@ void parseLatLon(char* line, double* time, double* latitude, double* longitude) 
   }
   else if (strncmp(token, "$GPGGA", 6) == 0) {
     token = strtok(NULL, ",");
-    *time = atof(token);
+    if(token != NULL)
+      *time = atof(token);
     // There is no pos status field; continue on. 
   }
   else {
