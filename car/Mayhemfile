@@ -1,4 +1,4 @@
-project: forallsecure/gps-telemetry
+project: gps-telemetry
 target: car
 advanced_triage: true
 cmds:
