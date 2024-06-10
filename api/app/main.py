@@ -1,11 +1,13 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 import json
 import requests
 import os
 import sqlite3
 import logging
+import traceback
 from redis import Redis
 from app.config import settings
 
@@ -33,6 +35,15 @@ logger = logging.getLogger(__name__)
 redis_client = Redis(host=settings.REDIS_HOST, port=settings.REDIS_PORT)
 
 
+@app.exception_handler(Exception)
+async def unicorn_exception_handler(request: Request, exc: Exception):
+    traceback_str = "".join(traceback.format_exception(None, exc, exc.__traceback__))
+    return JSONResponse(
+        status_code=500,
+        content={"message": "An unexpected error occurred", "detail": traceback_str},
+    )
+
+
 @app.on_event("startup")
 async def startup_event():
     """Creates an in-memory database with a user table, and populate it with
@@ -50,7 +61,7 @@ class Location(BaseModel):
     latitude: float
     longitude: float
 
-# SQL injection on the login route. 
+# SQL injection on the login route.
 @app.post("/login")
 async def login(user: UserLogin):
     logger.info(f"Login attempt for email: {user.email}")
@@ -60,10 +71,10 @@ async def login(user: UserLogin):
     if cur.fetchone() is not None:
         logger.info(f"Login successful for email: {user.email}")
         return {"message": "Login successful"}
-    else: 
+    else:
         logger.info(f"Login failed for email: {user.email}")
         raise HTTPException(status_code=401, detail="Invalid credentials")
-    
+
 @app.post("/logout")
 async def logout(user: UserLogin):
     logger.info(f"Logout for email: {user.email}")
