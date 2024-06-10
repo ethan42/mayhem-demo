@@ -23,6 +23,9 @@ jobs:
       with:
         submodules: recursive
 
+    - name: Install mdsbom
+      run: curl -sSL https://app.mayhem.security/cli/mdsbom/linux/mdsbom_0.1.0-9f6ee90_amd64.deb -O && sudo dpkg -i mdsbom_0.1.0-9f6ee90_amd64.deb
+
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
 
@@ -48,7 +51,7 @@ jobs:
       with:
         mayhem-token: ${{ secrets.MAYHEM_TOKEN }}
         owner: forallsecure
-        args: -f car/Mayhemfile --duration 300 --image ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+        args: -f car/Mayhemfile --image ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
         sarif-output: code.sarif
 
     - name: Upload SARIF file(s)
@@ -78,3 +81,11 @@ jobs:
       uses: github/codeql-action/upload-sarif@v2
       with:
         sarif_file: api.sarif
+
+    - name: Run Dynamic SBOM scan
+      run: mdsbom scout redis:alpine --sca-report-out dsbom.sarif --sca-summary-csv dsbom.json --workspace forallsecure
+
+    - name: Upload SARIF file(s)
+      uses: github/codeql-action/upload-sarif@v2
+      with:
+        sarif_file: dsbom.sarif
