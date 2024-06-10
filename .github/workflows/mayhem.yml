@@ -43,16 +43,37 @@ jobs:
         # tag the image with the commit SHA
         tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
 
-    - name: Start analysis
+    - name: Start Code analysis
       uses: forallsecure/mcode-action@v1
       with:
         mayhem-token: ${{ secrets.MAYHEM_TOKEN }}
         owner: forallsecure
         args: -f car/Mayhemfile --duration 300 --image ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+        sarif-output: code.sarif
+
+    - name: Upload SARIF file(s)
+      uses: github/codeql-action/upload-sarif@v2
+      with:
+        sarif_file: code.sarif
+
+    - name: Bring up the API
+      run: docker compose up -d
+
+    - name: Wait for the API to be up
+      run: bash -c 'while ! curl -s http://localhost:8000/openapi.json; do sleep 1; done'
+
+    - name: Start API analysis
+      uses: forallsecure/mapi-action@v1
+      with:
+        mayhem-token: ${{ secrets.MAYHEM_TOKEN }}
+        target: forallsecure/gps-telemetry/api
+        api-url: http://localhost:8000
+        api-spec: http://localhost:8000/openapi.json
+        sarif-report: api.sarif
+        args: -f api/Mayhemfile --duration 300 --url http://localhost:8000/openapi.json
         sarif-output: sarif
 
     - name: Upload SARIF file(s)
       uses: github/codeql-action/upload-sarif@v2
       with:
-        sarif_file: sarif
-
+        sarif_file: api.sarif
