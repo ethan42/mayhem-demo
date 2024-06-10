@@ -27,7 +27,10 @@ jobs:
       run: curl -sSfL https://raw.githubusercontent.com/docker/scout-cli/main/install.sh | sh -s --
 
     - name: Install mdsbom
-      run: curl -sSL https://app.mayhem.security/cli/mdsbom/linux/mdsbom_0.1.0-9f6ee90_amd64.deb -O && sudo dpkg -i mdsbom_0.1.0-9f6ee90_amd64.deb
+      run: curl -sSL https://app.mayhem.security/cli/mdsbom/linux/latest/mdsbom.deb -O && sudo dpkg -i mdsbom.deb
+
+    - name: MDSBOM login
+      run: mdsbom login https://app.mayhem.security  ${{ secrets.MAYHEM_TOKEN }}
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
@@ -86,7 +89,7 @@ jobs:
         sarif_file: api.sarif
 
     - name: Run Dynamic SBOM scan
-      run: mdsbom scout redis:alpine --sca-report-out dsbom.sarif --sca-summary-csv dsbom.json --workspace forallsecure
+      run: sudo mdsbom scout redis:alpine --sca-report-out dsbom.sarif --sca-summary-csv dsbom.json --workspace forallsecure
 
     - name: Upload SARIF file(s)
       uses: github/codeql-action/upload-sarif@v2
