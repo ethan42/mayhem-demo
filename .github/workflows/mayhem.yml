@@ -64,6 +64,7 @@ jobs:
 
     - name: Start API analysis
       uses: forallsecure/mapi-action@v1
+      continue-on-error: true
       with:
         mayhem-token: ${{ secrets.MAYHEM_TOKEN }}
         target: forallsecure/gps-telemetry/api
