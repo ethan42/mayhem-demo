@@ -1,0 +1,7 @@
+project: demos/car
+target: car-v19
+image: dbrumley/car
+advanced_triage: true
+cmds:
+  - cmd: /app/gps_uploader @@
+    env: {}
