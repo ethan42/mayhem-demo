@@ -47,7 +47,8 @@ jobs:
       uses: forallsecure/mcode-action@v1
       with:
         mayhem-token: ${{ secrets.MAYHEM_TOKEN }}
-        args: -f car/Mayhemfile --duration 300 --owner forallsecure --image ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+        owner: forallsecure
+        args: -f car/Mayhemfile --duration 300 --image ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
         sarif-output: sarif
 
     - name: Upload SARIF file(s)
