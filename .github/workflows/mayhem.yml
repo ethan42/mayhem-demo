@@ -23,6 +23,9 @@ jobs:
       with:
         submodules: recursive
 
+    - name: Install Docker Scout
+      run: curl -sSfL https://raw.githubusercontent.com/docker/scout-cli/main/install.sh | sh -s --
+
     - name: Install mdsbom
       run: curl -sSL https://app.mayhem.security/cli/mdsbom/linux/mdsbom_0.1.0-9f6ee90_amd64.deb -O && sudo dpkg -i mdsbom_0.1.0-9f6ee90_amd64.deb
 
