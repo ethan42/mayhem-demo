@@ -111,7 +111,7 @@ jobs:
         name: dsbom-patched-sarif
         path: dsbom-patched.sarif
 
-    # - name: Upload SARIF file(s)
-    #   uses: github/codeql-action/upload-sarif@v2
-    #   with:
-    #     sarif_file: dsbom-patched.sarif
+    - name: Upload SARIF file(s)
+      uses: github/codeql-action/upload-sarif@v2
+      with:
+        sarif_file: dsbom-patched.sarif
