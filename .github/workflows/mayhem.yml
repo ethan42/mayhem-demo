@@ -116,6 +116,16 @@ jobs:
         path: dsbom-patched.sarif
 
     - name: Upload SARIF file(s)
+      id: upload
       uses: github/codeql-action/upload-sarif@v2
       with:
         sarif_file: dsbom-patched.sarif
+
+    - name: Dismiss issues that were not observed at runtime
+      uses: advanced-security/dismiss-alerts@v1
+      with:
+        # specify a 'sarif-id' and 'sarif-file'
+        sarif-id: ${{ steps.upload.outputs.sarif-id }}
+        sarif-file: dsbom-patched.sarif
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
