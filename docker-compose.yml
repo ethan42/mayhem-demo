@@ -1,6 +1,7 @@
 services:
   api:
     build: ./api
+    image: "ghcr.io/forallsecure-customersolutions/mayhem-demo/api:${SHA:-latest}"
     ports:
       - "8000:8000"
     depends_on:
@@ -8,17 +9,19 @@ services:
 
   ui:
     build: ./ui
+    image: "ghcr.io/forallsecure-customersolutions/mayhem-demo/ui:${SHA:-latest}"
     ports:
       - "3000:3000"
     depends_on:
       - api
 
   redis:
-    image: "redis:alpine"
+    image: "forallsecuredevbot/redis:latest"
     ports:
       - "6379:6379"
 
   on_car:
     build: ./car
+    image: "ghcr.io/forallsecure-customersolutions/mayhem-demo/car:${SHA:-latest}"
     depends_on:
       - api
