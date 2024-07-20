@@ -13,7 +13,8 @@ void stack_exhaustion() {
 
 void vulnerable_c(char* line, int latitude, int longitude) {
 
-  volatile int size1, size2, size3, size4;
+  volatile int size1, size2, size4;
+  volatile unsigned int size3;
 
   // A bit of computation on our inputs. 
   if (latitude < 0) {
@@ -122,7 +123,7 @@ void upload_position(const char* URL, double latitude, double longitude)
   }
 
   snprintf(command, sizeof(command),
-    "curl -X POST -H \"Content-Type: application/json\" -d '{\"latitude\": %.6f, \"longitude\": %.6f}' %s",
+    "curl -X POST -H \"Content-Type: application/json\"  -u me@me.com:123456 -d '{\"latitude\": %.6f, \"longitude\": %.6f}' %s",
     latitude, longitude, URL);
 
   system(command);
