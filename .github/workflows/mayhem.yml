@@ -97,7 +97,7 @@ jobs:
         api-url: http://localhost:8000
         api-spec: http://localhost:8000/openapi.json
         sarif-report: api.sarif
-        run-args: --experimental-rules
+        run-args: --experimental-rules --basic-auth "me@me.com:123456"
 
     # - name: Start ZAP API analysis
     #   uses: forallsecure/mapi-action@v1
@@ -121,6 +121,15 @@ jobs:
 
     - name: Bring down the app
       run: SHA=${{ github.sha }} docker compose down
+
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v4
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      with:
+        files: coverage/coverage.xml
+        flags: Mayhem-for-API
+        fail_ci_if_error: true
 
     - name: Run Dynamic SBOM scan
       run: | 
@@ -193,4 +202,4 @@ jobs:
     #     GITHUB_TOKEN: ${{ github.token }}
 
     - name: Pause to let the sync run
-      run: sleep 60
+      run: sleep 15
