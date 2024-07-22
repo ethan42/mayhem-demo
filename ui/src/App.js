@@ -27,14 +27,14 @@ function App() {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post('http://localhost:8000/login', {
-        email: username,
-        password: password
+      await axios.get('http://localhost:8000/info', {
+        auth: {
+          username: username,
+          password: password
+        }
       });
-      if (response.data.message === 'Login successful') {
-        setIsAuthenticated(true);
-        setLoginError('');
-      }
+      setIsAuthenticated(true);
+      setLoginError('');
     } catch (error) {
       setLoginError('Login failed: Invalid username or password');
       console.error("Login error:", error);
@@ -42,18 +42,9 @@ function App() {
   };
 
   const handleLogout = async () => {
-    try {
-      const response = await axios.post('http://localhost:8000/logout', {
-        email: username,
-        password: password
-      });
-      if (response.data.message === 'Logout successful') {
-        setIsAuthenticated(false);
-        setLoginError('');
-      }
-    } catch (error) {
-      console.error("Logout error:", error);
-    }
+    username = "";
+    password = "";
+    setIsAuthenticated(false);
   };
 
   return (

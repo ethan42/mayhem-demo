@@ -23,7 +23,12 @@ const MapView = () => {
   useEffect(() => {
     const fetchLocations = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/locations');
+        const response = await axios.get('http://localhost:8000/locations', {
+          auth: {
+            username: "me@me.com",
+            password: "123456"
+          }
+        });
         setLocations(response.data.locations);
       } catch (error) {
         console.error("Error fetching locations:", error);
