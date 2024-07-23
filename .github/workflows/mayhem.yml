@@ -60,7 +60,7 @@ jobs:
  
     - name: Restart services
       run: |
-        sudo systemctl restart docker || sudo journalctl -xeu docker
+        sudo systemctl restart docker || sudo journalctl -xeu docker;
         sudo systemctl restart mdsbom || sudo journalctl -xeu mdsbom
 
     - name: MDSBOM login
@@ -136,7 +136,7 @@ jobs:
       run: SHA=${{ github.sha }} docker compose down
 
     - name: Pause to let mdsbom sync run
-      run: sleep 15 && mdsbom query containers -a
+      run: sleep 15 && mdsbom query --workspace forallsecure-demo containers -a
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v4
