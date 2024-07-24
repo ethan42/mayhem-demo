@@ -60,7 +60,7 @@ jobs:
  
     - name: Restart services
       run: |
-        sudo systemctl restart docker || sudo journalctl -xeu docker
+        sudo systemctl restart docker || sudo journalctl -xeu docker;
         sudo systemctl restart mdsbom || sudo journalctl -xeu mdsbom
 
     - name: MDSBOM login
@@ -83,7 +83,7 @@ jobs:
         SHA=${{ github.sha }} docker compose push -q
 
     - name: Bring up the app
-      run: SHA=${{ github.sha }} docker compose up -d --wait
+      run: SHA=${{ github.sha }} docker compose up -d --wait && docker ps
 
     - name: Wait for the API to be up
       run: bash -c 'while ! curl -s http://localhost:8000/openapi.json; do sleep 1; done'
@@ -134,6 +134,9 @@ jobs:
 
     - name: Bring down the app
       run: SHA=${{ github.sha }} docker compose down
+
+    - name: Pause to let mdsbom sync run
+      run: sleep 15 && mdsbom query --workspace forallsecure-demo containers -a
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v4
@@ -213,6 +216,3 @@ jobs:
     #     sarif-file: dsbom-car-patched.sarif
     #   env:
     #     GITHUB_TOKEN: ${{ github.token }}
-
-    - name: Pause to let the sync run
-      run: sleep 15
