@@ -1,11 +1,9 @@
-# OT Example Service 
+# Mayhem Demo App Service 
 
-OT is a growing security concern, with typically three parts to the stack:
-1. Finding what's on the attack surface, and what known vulnerabilities exist.
-2. Finding new exploitable vulnerabilities.
-3. Building this into the pipeline for continuous development.
-
-To make this concrete, we've built a GPS example.
+Welcome to the Mayhem Demo App!  This demo highlights how Mayhem helps you
+solve code, API, and SBOM security and stress testing challenges. The app
+contains an on-car GPS service that transmits data to an API, which then is
+used by a user UI to display traveled routes. 
 
 ![GPS Telemetry Image](./gps_telemetry_image.png)
 
@@ -19,26 +17,22 @@ flowchart LR;
     API <-->|Points on map| UI;
 ```
 
-- **On Car GPS**: The on-car GPS sensor transmits location data to a cloud API.
-  This part tests how well analysis:
-    - Identifies vulnerabilities in C code and/or compiled binaries. The code has
-      several vulnerabilities introduced, similar to [Damn Vulnerable
-      C](https://github.com/hardik05/Damn_Vulnerable_C_Program) and
-      [lwgps](https://github.com/MaJerle/lwgps).  
-    - Creates testing coverage. Many standards require source and/or binary
-      testing coverage. 
-    - Identifies what SBOM/SCA components are on the attack surface. The
-      compiled app only uses glibc, so any other SBOM/SCA results are not on
-      the attack surface and are irrelevant. 
+- **On Car GPS**: This is a native app that transmits GPS sensor data to a
+  Cloud API. The source [./car/gps_uploader.c](./car/gps_uploader.c) contains
+  vulnerabilities such as:
+  * Integer overflow
+  * Integer underflow
+  * Stack-based buffer overflow
+  * Heap overflow
+  * Double Free
+  * Use-after-free
+  * Memory leaks
+
 - **Cloud API**: The cloud API receives GPS data from cars, and services a UI
-  for displaying that information. The API is built on
-  [FastAPI](https://fastapi.tiangolo.com/), one of the most popular python
-  frameworks today.  This part tests how well analysis: 
-    - Identifies vulnerabilities in an API.
-    - Identifies API routes that may break. 
-    - Identifies what SBOM/SCA components are on the attack surface. Again,
-      there are several components that have known vulnerabilities, but not on
-      the attack surface. 
+  for displaying that information. API issues include:
+  * SQL Injection at [./api/app/main.py#L81](./api/app/main.py#L81)
+  * 
+   
 - **Database**: We use Redis. We include this as another image that has known
   vulnerabilities, but not on the attack surface. 
 - **UI**: A UI that fetches GPS data from the API server, and displays it to an
