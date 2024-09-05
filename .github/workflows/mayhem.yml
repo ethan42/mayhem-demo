@@ -142,14 +142,24 @@ jobs:
         mayhem-token: ${{ secrets.MAYHEM_TOKEN }}
         owner: platform-demo
         args: -f car/Mayhemfile --image ${{ env.REGISTRY }}/${{ env.REPO_NAME }}/car:${{ github.sha }} --duration 600
-        sarif-output: code.sarif
-        coverage-output: car-coverage
+        sarif-output: code-sarif/
+        coverage-output: car-coverage/
+
+    - name: Add car prefix to SARIF
+      shell: bash
+      run: |
+        jq '.runs[0].results[].locations[].physicalLocation.artifactLocation.uri |= "car/" + . 
+          | .runs[0].results[].locations[].physicalLocation.artifactLocation.uri |= sub("app/"; "") 
+          | .runs[0].results[].locations[].physicalLocation.artifactLocation.uri |= sub("/rc/"; "/src/")' \
+          code-sarif/car.sarif > code-sarif/car2.sarif
+        mv -f code-sarif/car2.sarif code-sarif/car.sarif
 
     - name: Upload SARIF file
       uses: github/codeql-action/upload-sarif@v3
       with:
-        sarif_file: code.sarif
+        sarif_file: code-sarif/
         category: Mayhem-for-Code
+        checkout_path: ${{ github.workspace }}/car
 
     - name: Upload coverage to Codecov
       if: always()
