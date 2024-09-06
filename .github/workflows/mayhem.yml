@@ -90,7 +90,7 @@ jobs:
 
 
     - name: Bring up the app
-      run: SHA=${{ github.sha }} docker compose up -d --wait && docker ps
+      run: SHA=${{ github.sha }} docker compose up -d --wait && sleep 1 && docker ps
 
     - name: Wait for the API to be up
       run: bash -c 'while ! curl -s http://localhost:8000/openapi.json; do sleep 1; done'
