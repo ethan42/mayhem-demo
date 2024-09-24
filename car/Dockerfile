@@ -1,4 +1,4 @@
-FROM debian:stable-slim
+FROM debian:testing
 RUN apt-get update && apt-get install -y --no-install-recommends build-essential libc6-dbg curl netcat-traditional
 
 # Copy in source code
