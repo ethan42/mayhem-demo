@@ -1,56 +1,9 @@
-# Mayhem Demo App Service 
-
-Welcome to the Mayhem Demo App!
-
-This demo highlights how Mayhem helps you solve code, API, and SBOM security and stress testing challenges. The app contains:
-  * An on-car GPS service (code security, OSS security)
-  * Transmits data to an API (API security, OSS security)
-  * Stores results in a database (OSS security)
-  * Used by a user UI to display traveled routes  
-
-![GPS Telemetry Image](./gps_telemetry_image.png)
-
-## Structure and Vulnerabilities
-
-```mermaid
-flowchart LR;
-    Car -->|GPS Data| API;
-    API <--> Redis;
-    API <-->|Points on map| UI;
-```
-
-- **Code Security**: The GPS code is a native app that transmits GPS sensor
-  data to a Cloud API. The source  [./car/gps_uploader.c](./car/gps_uploader.c)
-  contains vulnerabilities such as:
-  * Integer overflow
-  * Integer underflow
-  * Stack-based buffer overflow
-  * Heap overflow
-  * Double Free
-  * Use-after-free
-  * Memory leaks
-
-- **API Security**: The cloud API receives GPS data from cars, and services a UI
-  for displaying that information. The source
-  [./api/app/main.py](./api/app/main.py) contains vulnerabilities including: 
-  * SQL Injection
-  * Path Traversal 
-  * Authentication bypass
-  * Spec/implementation mismatch.
-   
-- **SBOM/SCA Security**: There are four images in this repo: redis, car, api,
-  and UI. Each is built with OSS components and has vulnerabilities both on and
-  off the attack surface.
-
-
 ## Running the App
 
-Make sure you have Docker and Docker Compose installed on your machine and then
-run:
+Make sure you have Docker and Docker Compose installed on your machine and then run:
 ```sh
 docker compose up --build
 ```
-
 
 Then navigate to [http://localhost:3000](http://localhost:3000). In more detail: 
 
@@ -109,7 +62,6 @@ Get the code running by:
     the mayhem-demo directory.  
   * Build and run the docker images with `docker compose up --build`
 
-
 ### Step 4a: Run Mayhem for API
 In this step, you’ll run Mayhem for API to check the demo API server. This step
 uploads the report to Mayhem for viewing, and also produces a local HTML
@@ -135,15 +87,15 @@ framework.
 The specific arguments you used were:
 
   * `mayhem-demo/api` is the project name and target name for the app. By
-    default, Mayhem puts results in your private workspace. You will see
-    results in the Mayhem UI under your personal workspace under this project
-    name.  If you want the project in a shared workspace, just prefix the path
-    with the workspace name like: `shareworkspace/mayhem-demo/api` 
+default, Mayhem puts results in your private workspace. You will see
+results in the Mayhem UI under your personal workspace under this project
+name.  If you want the project in a shared workspace, just prefix the path
+with the workspace name like: `shareworkspace/mayhem-demo/api` 
 
   * `http://localhost:8000/openapi.json`
-    the location of the OpenAPI spec.  FastAPI automatically generates one for
-    you, as can most frameworks, or write your specification yourself to check
-    your implementation. 
+the location of the OpenAPI spec.  FastAPI automatically generates one for
+you, as can most frameworks, or write your specification yourself to check
+your implementation. 
 
   *  `http://localhost:8000/` is an URL to the running API. The host must be
      reachable from the host running the `mapi` CLI, but need not be internet
@@ -152,11 +104,11 @@ The specific arguments you used were:
   * `--html mapi.html` says to output a local HTML report called `mapi.html`
 
   * `--interactive` says to run in interactive mode. Note that you can move
-    your cursor through the TUI to dig into results!
+your cursor through the TUI to dig into results!
 
   * `--basic-auth` tells `mapi` the credentials for the endpoints using basic
-    authentication. `mapi` supports several auth types, and you can find a list
-    with `mapi run --help`. 
+authentication. `mapi` supports several auth types, and you can find a list
+with `mapi run --help`. 
 
   * `--ignore-rule internal-server-error` says to ignore internal server errors
    (5xx HTTP response codes).  Some users prefer to see these because they show
@@ -186,10 +138,10 @@ tool that outputs a CycloneDX or SPDX file.
 **Pre-requisites:**
   * Linux system (more OSes coming shortly)
   * The demo service docker images are available and you know their path. They
-    do not need to be running. (`docker compose build`).
+do not need to be running. (`docker compose build`).
   * You have installed
     [docker](https://docs.docker.com/engine/install/ubuntu/), are logged into
-    docker (`docker login`) and have [docker
+docker (`docker login`) and have [docker
     scout](https://docs.docker.com/scout/install/) installed. 
   * You have `mdsbom` installed and you are logged into Mayhem. 
 
@@ -207,17 +159,17 @@ The command line about did several things all at once:
 2. Identified the attack surface in the `api` image. 
 3. Reduced the SCA findings to only those items on the attack surface. In our
    run, 90\% of the `docker scout` SBOM/SCA results were irrelevant to
-   security!
+   security!  
    
 In more detail, the arguments: 
 
   * `scout` specified to run docker scout to get the initial SBOM/SCA result.
     Mayhem supports any SBOM/SCA tool that creates a CycloneDX or SPDX file.
     You can run `mdsbom help` to see other possibilities, like anchore, trivy,
-    and more generally any source using a standardized format. 
+and more generally any source using a standardized format. 
 
   * `ghcr.io/forallsecure-customersolutions/mayhem-demo/api:latest` is path to
-    the docker image (`docker compose build` will default to this name).
+the docker image (`docker compose build` will default to this name).
 
   * ``--sca-report-out dsbom-api.sarif` says to output a SARIF format as file
     `dsbom-api.sarif`.  
@@ -231,7 +183,7 @@ upload results.
 **Prerequisites**
 You need to have the built docker images from the `docker compose build` step,
 and a registry you can push the images to.  You can also use our pre-built
-containers [here](https://github.com/orgs/ForAllSecure-CustomerSolutions/packages?repo_name=mayhem-demo).
+containers [here](https://github.com/ForAllSecure-CustomerSolutions/packages?repo_name=mayhem-demo).
 
 
 **Steps:**
@@ -265,7 +217,7 @@ your own apps. Here are some great starting points to bookmark:
     [https://github.com/ForAllSecure/mayhem-examples](https://github.com/ForAllSecure/mayhem-examples) 
 
   * **OSS Examples:** Sometimes examples are the best way to learn, and we’ve
-    got you covered.  View over 1500 repositories that have integrated Mayhem
+got you covered.  View over 1500 repositories that have integrated Mayhem
     at
     [https://github.com/orgs/mayhemheroes/repositories](https://github.com/orgs/mayhemheroes/repositories)
 
